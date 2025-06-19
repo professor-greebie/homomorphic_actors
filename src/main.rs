@@ -2,8 +2,10 @@ use env_logger::{Builder, Env};
 use log::info;
 
 use sids::actors::messages::Message;
-use sids::actors::actor::Actor;
-use sids::actors::messages::ResponseMessage;
+use trust::trust_message::TrustMessage;
+
+mod trust;
+
 use sids::actors::{get_response_channel, send_message_by_id, spawn_actor, start_actor_system};
 
 fn get_loggings() {
@@ -12,45 +14,10 @@ fn get_loggings() {
 }
 
 
-#[derive(Debug, Clone)]
-enum TrustMessage {
-    TrustAddKey {
-        key: String,
-    },
-    TrustRemoveKey {
-        key: String,
-    },
-}
-
-struct TrustActor;
-impl Actor<TrustMessage> for TrustActor {
-    async fn receive(&mut self, message: Message<TrustMessage>) where Self:Sized + 'static {
-        if let Message {
-            payload,
-            stop: _,
-            responder: Some(courrier), 
-            blocking: _,
-        } = message {
-
-            match payload.expect("Message received without payload.") {
-                TrustMessage::TrustAddKey { key } => {
-                    info!("Trust key added: {}", key);
-                }
-                TrustMessage::TrustRemoveKey { key } => {
-                    info!("Trust key removed: {}", key);
-                }
-            }
-            let _ = courrier
-                .send(ResponseMessage::Success);
-        }
-    }
-}
-
-
 #[tokio::main]
  async fn main() {
     get_loggings();
-    let trust_actor = TrustActor{};
+    let trust_actor =trust::trust_actor::TrustActor{};
     let mut actor_system = start_actor_system::<TrustMessage>();
     let (tx, rx) = get_response_channel(&mut actor_system);
     let (rtx,rrx) = get_response_channel(&mut actor_system);

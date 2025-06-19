@@ -769,9 +769,9 @@ dependencies = [
 
 [[package]]
 name = "sids"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4e99b658349f5ff7190afa84e0110e63cdc352d19c7b719b19f98395c6548c6"
+checksum = "f3cccd2f1c54fdc75240d79aa3669eacfab9e2605947f61ba231d022a08d30cc"
 dependencies = [
  "env_logger",
  "log",

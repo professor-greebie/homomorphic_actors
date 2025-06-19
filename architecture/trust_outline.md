@@ -3,7 +3,8 @@
 ```mermaid
 
 flowchart LR
-    start[Guardian] --> t1[Trust Actor]
+    start[Guardian] --spawn--> t1[Trust Actor]
+    
 
 
 
