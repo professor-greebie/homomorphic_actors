@@ -5,7 +5,8 @@ edition = "2024"
 
 [dependencies]
 tokio = { version = "1", features = ["full"]}
-sids = "0.3.2"
+sids = "0.4.1"
 tfhe = { version = "1.2.0", features = ["boolean", "shortint", "integer"] }
 env_logger = "0.11.8"
 log = {version = "0.4", features = ["kv"]}
+uuid = {version = "1.17.0", features = ["v4"]}
