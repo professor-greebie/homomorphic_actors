@@ -1,11 +1,11 @@
 #[derive(Debug, Clone)]
 pub enum TrustMessage {
     CreateKeys,
-    ReplaceKeys {
-        new_key: Vec<u8>,
+    ReplaceKey {
+        key: uuid::Uuid,
     },
     RemoveKey {
-        key: String,
+        key: uuid::Uuid,
     },
 }
 
@@ -13,6 +13,10 @@ pub enum TrustMessage {
 pub enum TrustResponse {
     Success,
     SuccessWithData {
+        id: uuid::Uuid,
         data: Vec<u8>,
-    }
+    },
+    Failure {
+        error: String,
+    },
 }

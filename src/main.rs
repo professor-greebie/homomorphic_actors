@@ -3,6 +3,7 @@ use log::info;
 
 use sids::actors::messages::Message;
 use trust::trust_message::TrustMessage;
+use uuid::{uuid};
 
 mod trust;
 
@@ -19,7 +20,7 @@ fn get_loggings() {
 #[tokio::main]
  async fn main() {
     get_loggings();
-    let trust_actor =trust::trust_actor::TrustActor{};
+    let trust_actor = trust::trust_actor::TrustActor;
     let mut actor_system = start_actor_system::<TrustMessage, TrustResponse>();
     let (tx, rx) = get_response_channel(&mut actor_system);
     let (rtx,rrx) = get_response_channel(&mut actor_system);
@@ -30,33 +31,45 @@ fn get_loggings() {
         responder: Some(tx),
         blocking: None,
     };
+    
+    spawn_actor(&mut actor_system, trust_actor, Some("First Trust Actor".to_string())).await;
+    send_message_by_id(&mut actor_system, 0, message).await;
+    let cuid = match rx.await {
+        Ok(response) => {
+            info!("Received response: {:?}", &response);
+            match response {
+                TrustResponse::SuccessWithData {id, data: _ } => {
+                    // Assuming the data is a serialized UUID
+                    id
+                }
+                _ => panic!("Unexpected response type"),
+            }
+        }
+        Err(e) => panic!("Failed to receive response: {:?}", e),
+    };
     let rem_message = Message {
         payload: Some(TrustMessage::RemoveKey {
-            key: "example_key".to_string(),
+            key: uuid!("1425a642-4c9d-4f5a-8458-15336f4891f9"),
         }),
         stop: false,
         responder: Some(rtx),
         blocking: None,
     };
     let rep_message = Message {
-        payload: Some(TrustMessage::ReplaceKeys {
-            new_key: vec![1, 2, 3, 4], // Example key data
+        payload: Some(TrustMessage::ReplaceKey {
+            key: cuid, // Example key data
         }),
         stop: false,
         responder: Some(rptx),
         blocking: None,
     };
-    spawn_actor(&mut actor_system, trust_actor, Some("First Trust Actor".to_string())).await;
-    send_message_by_id(&mut actor_system, 0, message).await;
-    if let Ok(response) = rx.await {
+    
+    send_message_by_id(&mut actor_system, 0, rep_message).await;
+    if let Ok(response) = rprx.await {
         info!("Received response: {:?}", response);
     }
     send_message_by_id(&mut actor_system, 0, rem_message).await;
     if let Ok(response) = rrx.await {
-        info!("Received response: {:?}", response);
-    }
-    send_message_by_id(&mut actor_system, 0, rep_message).await;
-    if let Ok(response) = rprx.await {
         info!("Received response: {:?}", response);
     }
 }
