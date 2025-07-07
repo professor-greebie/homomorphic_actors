@@ -2,6 +2,13 @@
 name = "homomorphic_actors"
 version = "0.0.1"
 edition = "2024"
+authors = ["Ryan Deschamps <rdeschamps@conestogac.on.ca"]
+repository = "https://github.com/professor-greebie/homomorphic_actors"
+description = "Homomorphic Actors is a look at homomorphic encryption as run inside an actor model system."
+keywords = ["actor-model", "concurrency", "encryption", "homomorphic encryption"]
+categories = ["asynchronous", "concurrency", "encryption"]
+exclude = ["/architecture", "/keys", "/target"]
+license = "Apache-2.0"
 
 [dependencies]
 tokio = { version = "1", features = ["full"]}
