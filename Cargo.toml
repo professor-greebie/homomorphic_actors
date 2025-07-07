@@ -6,7 +6,7 @@ authors = ["Ryan Deschamps <rdeschamps@conestogac.on.ca"]
 repository = "https://github.com/professor-greebie/homomorphic_actors"
 description = "Homomorphic Actors is a look at homomorphic encryption as run inside an actor model system."
 keywords = ["actor-model", "concurrency", "encryption", "homomorphic"]
-categories = ["asynchronous", "concurrency", "encryption"]
+categories = ["asynchronous", "concurrency", "security"]
 exclude = ["/architecture", "/keys", "/target"]
 license = "Apache-2.0"
 
